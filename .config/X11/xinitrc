@@ -1,0 +1,13 @@
+dunst &
+sxhkd &
+udiskie &
+clipmenud &
+xsetroot -cursor_name left_ptr &
+xrdb -load ~/.config/X11/xresources &
+xmodmap ~/.config/X11/xmodmap &
+wmname compiz
+setxkbmap -option 'caps:ctrl_modifier' -option 'compose:menu' && xcape -e 'Caps_Lock=Escape' &
+~/.dropbox-dist/dropboxd &
+#mpd &
+#mpDris2 &
+exec bspwm

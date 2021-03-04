@@ -1,0 +1,1 @@
+/home/mirko/.config/X11/xinitrc
