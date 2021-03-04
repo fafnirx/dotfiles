@@ -1,0 +1,4 @@
+#alias l='lsd -hA --group-dirs first'
+ialias ls='exa -a --group-directories-first'
+ialias spt='launchspt'
+ialias grep='grep --color=auto'

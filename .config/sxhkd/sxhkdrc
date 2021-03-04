@@ -1,0 +1,219 @@
+#---BSPWM Bindings
+# Quit bspwm
+super + shift + Escape
+  prompt "Are you sure you would like to quit this Xsession" "bspc quit"
+
+# Restart bspwm
+super + shift + w
+  bspc wm -r
+
+# Kill Window
+super + shift + q
+  crystal --close
+
+# Focus on window in direction
+super + {h,j,k,l}
+	bspc node -f {west,south,north,east}
+# Focus on window in direction
+hyper + {a,s,w,d}
+	bspc node -f {west,south,north,east}
+
+# Send window to desktop
+super + shift + {0-9}
+  crystal --send {0-9}
+
+# Send window to desktop and swap to desktop
+super + control + {1-9,0}
+  bspc node -d '^{1-9,10}' --follow
+
+# Swap nodes the tree from the current nodes parent
+super + control + {Up, Down}
+  bspc node @parent -C {forward, backward}
+
+# Rotate the tree from the current nodes parent
+super + control + {Right, Left}
+	bspc node @parent --rotate {90,270}
+
+# Flip the tree from the current nodes parent
+super + control + {h,j,k,l}
+  bspc node @parent -F {vertical,horizontal,horizontal,vertical}
+
+# Toggle fullscreen on and off
+super + f
+  crystal --fullscreen
+
+# Toggle floating on and off
+super + o
+  bspc node focused.tiled -t floating || bspc node focused.floating -t tiled
+
+# Swap window with direction
+super + shift + {h,j,k,l}
+	bspc node -s {west,south,north,east}
+
+# Focus on desktop
+super + {0-9}
+	crystal --focus {0-9}
+
+# Cycle through desktops
+super + alt + {Left, Right}
+  crystal --focus {prev, next}
+
+# Expand a window by moving one of its side outward
+super + s : {h,j,k,l}
+    STEP=20; SELECTION={1,2,3,4}; \
+    bspc node -z $(echo "left -$STEP 0,bottom 0 $STEP,top 0 -$STEP,right $STEP 0" | cut -d',' -f$SELECTION) || \
+    bspc node -z $(echo "right -$STEP 0,top 0 $STEP,bottom 0 -$STEP,left $STEP 0" | cut -d',' -f$SELECTION)
+#ctrl + alt + {h,j,k,l}
+#	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# Contract a window by moving one of its side inward
+#ctrl + alt + shift + {h,j,k,l}
+#	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# Move a floating window
+super + ctrl + alt + {Left,Right,Up,Down}
+  xdo move {-x -20, -x +20, -y -20, -y +20}
+
+# Dropdown terminal
+super + alt + Return
+	tdrop -ma -w 1916 -y 0 st
+
+#---Tabbing---#
+# Prompt to open new app as a new tab
+#super + t; d
+#    tabdmenu
+
+# Add focused window to a tabbed instance in given direction
+# super + t; {h,j,k,l}
+#   tabc add {west,south,north,east} "$(bspc query -N -n focused)"
+
+# Remove one tab from tabbed
+# super + t; r
+#     tabbed=$(bspc query -N -n focused); \
+#     child=$(tabc list $tabbed | head -n1); \
+#     tabc remove $child
+
+#---System Control---#
+# Restart hotkey damon
+super + shift + x
+  killandnotify "sxhkd" "Config reloaded" && sxhkd &
+
+# Reload polybar
+super + shift + o
+  reloadpolybar
+
+# Execute Reboot (r) or Shutdown(s)
+super + shift + {r, s}
+  prompt {"Are you sure you would like to reboot?" "sudo reboot", "Are you sure you would like to shutdown" "sudo shutdown"}
+
+# Lock the screen
+super + shift + e
+  betterlockscreen -l
+
+super + shift + c
+  toggleprogram "picom" "--experimental-backends"
+
+#---Script Keys---#
+super + {x, u, t, w, i, g, a, p, m}
+  {dmonitor "HDMI-A-3" "DVI-D-0", updatepackages, notifytorrents, devenv, importandroid, openterminalin, dcalc, cpcolor, notifycrypto}
+
+super + {b, c, e}
+  {bookmenu -p "Select a bookmark" -b ~/.config/bookmenu/browser -co $BROWSER, bookmenu -p "Select a config" -b ~/.config/bookmenu/configs -co "$TERMINAL -e nvim"}
+
+# Audio Control
+# ALSA Controls
+#super + {_, shift} + p
+#  alsavolctrl Headphone {2%+, 2%-}
+#
+#super + {_, shift} + s
+#  alsavolctrl Speaker {2%+, 2%-}
+#
+#super + {Up, Down}
+#  alsavolctrl Master {2%+, 2%-}
+#
+#super + F4
+#  alsavolctrl All mute
+
+# Pulse Controls
+super + {F3, F2}
+  pulsevolctrl "output-vol" "alsa_output.pci-0000_0b_00.4.analog-stereo" {+2%, -2%}
+
+super + F4
+  pulsevolctrl "output-mute" "alsa_output.pci-0000_0b_00.4.analog-stereo"
+
+# Media Controls
+# Play next track
+super + F8
+  playerctl next
+# Play previos track
+super + F6
+  playerctl previous
+# Play/Pause music player
+super + F7
+  playerctl play-pause
+# Stop music player
+super + F5
+  playerctl stop
+
+super + slash
+  songnotification
+
+# Brightness
+super + {Right, Left}
+  light {-A 5, -U 5} && polybar-msg hook backlight 1
+
+# Screenshots
+# Take a full screenshot
+Print
+	flameshot full -p ~/Pictures/screenshots
+# Run screenshot UI
+Print + shift
+	flameshot gui
+# Take a screenshot of current screen
+Print + control
+	flameshot screen -p ~/Pictures/screenshots
+
+#---Application Launchers---#
+# Run dmenu
+super + d
+  dmenu_run -fn "JetBrains Mono Medium-10"
+
+# Start terminal
+super + Return
+  $TERMINAL
+
+super + e
+  kill -s USR1 $(pidof deadd-notification-center)
+
+# Tracking Apps
+#super + alt + {a, r, t, p, n, c, j}
+#  bspc rule -a st-256color -o state=floating rectangle=800x500+100+100 sticky=on && $TERMINAL -e {alsamixer, lf, transmission-remote-cli, htop, nvim, calcurse, joplin}
+
+# Open applications
+super + alt + {b, g}
+    {$BROWSER, gimp} 
+# Open alsamixer,lf,,htop,nvim,calcurse,VimWiki,pulsemixer in terminal
+super + alt + {a, r, h, n, c, j, p}
+  $TERMINAL -e {alsamixer, lf, htop, nvim, calcurse, nvim $HOME/Documents/vimwiki/index.md pulsemixer}
+
+# Use rofi to search open windows
+hyper + backslash 
+	rofi -show window
+# Use rofi to search apps
+super + comma 
+	rofi -show run
+# Use rofi to show keyboard shortcuts
+super + period
+	sxhkdhelp
+
+# Use rofi to show clipboard entries
+hyper + c
+	CM_LAUNCHER="rofi" clipmenu -p Clipboard \
+        -no-show-icons \
+        -theme-str '* \{font: 10px; \}' \
+        -theme-str 'listview \{ spacing: 0; \}' \
+        -theme-str 'window \{ width: 20em; \}'
+
+# Hide/Show keepassxc
+super + shift + p
+    bspwm-toggle-visibility KeePassXC keepassxc
