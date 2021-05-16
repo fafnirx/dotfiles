@@ -15,7 +15,7 @@ super + shift + q
 super + {h,j,k,l}
 	bspc node -f {west,south,north,east}
 # Focus on window in direction
-hyper + {a,s,w,d}
+mod3 + {a,s,w,d}
 	bspc node -f {west,south,north,east}
 
 # Send window to desktop
@@ -110,6 +110,10 @@ super + shift + {r, s}
 super + shift + e
   betterlockscreen -l
 
+# Suspend and Hibernate(Hybrid)
+super + shift + F12
+  systemctl suspend
+
 super + shift + c
   toggleprogram "picom" "--experimental-backends"
 
@@ -197,7 +201,7 @@ super + alt + {a, r, h, n, c, j, p}
   $TERMINAL -e {alsamixer, lf, htop, nvim, calcurse, nvim $HOME/Documents/vimwiki/index.md pulsemixer}
 
 # Use rofi to search open windows
-hyper + backslash 
+mod3 + backslash 
 	rofi -show window
 # Use rofi to search apps
 super + comma 
@@ -207,7 +211,7 @@ super + period
 	sxhkdhelp
 
 # Use rofi to show clipboard entries
-hyper + c
+mod3 + c
 	CM_LAUNCHER="rofi" clipmenu -p Clipboard \
         -no-show-icons \
         -theme-str '* \{font: 10px; \}' \
