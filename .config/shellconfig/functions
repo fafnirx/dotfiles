@@ -77,3 +77,9 @@ zle -N expand-alias-space
 bindkey " " expand-alias-space
 bindkey -M isearch " " magic-space
 
+# Function to allow using dotrepo
+
+config() {
+    /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME "$@"
+}
+
